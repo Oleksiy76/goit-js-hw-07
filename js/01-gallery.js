@@ -25,8 +25,6 @@ gallery.insertAdjacentHTML("afterbegin", itemsMarkup);
 
 gallery.addEventListener("click", onGalleryClick);
 
-let imgLargeUrl;
-
 function onGalleryClick(evt) {
   evt.preventDefault();
 
@@ -35,16 +33,19 @@ function onGalleryClick(evt) {
   }
 
   const imgSrc = evt.target.dataset.source;
-  imgLargeUrl = basicLightbox.create(`<img src="${imgSrc}">`);
-  imgLargeUrl.show();
   console.log(imgSrc);
-}
 
-gallery.addEventListener("keydown", closeModalOnESC);
+  const imgLargeUrl = basicLightbox.create(`<img src="${imgSrc}">`, {
+    onShow: () => document.addEventListener("keydown", closeModalOnESC),
+    onClose: () => document.removeEventListener("keydown", closeModalOnESC),
+  });
 
-function closeModalOnESC(evt) {
-  if (evt.code === "Escape") {
-    imgLargeUrl.close();
+  imgLargeUrl.show();
+
+  function closeModalOnESC(evt) {
+    if (evt.code === "Escape") {
+      imgLargeUrl.close();
+    }
   }
 }
 
